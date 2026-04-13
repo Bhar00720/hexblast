@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="description" content="Orb Clash - 2-Player arena combat with AI opponents, powerups, charged shots, and dash abilities. Free browser game!">
+<meta name="keywords" content="orb clash, 2 player browser game, arena combat game, free multiplayer html5, AI opponent game, corelume tech games">
+<title>Orb Clash - Free 2-Player Browser Game | Corelume Tech</title>
+<link rel="icon" href="https://www.corelumetech.in/assets/logo.png" type="image/png">
+<link rel="canonical" href="https://www.corelumetech.in/games/orb-clash/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<meta name="ad-enabled" content="true">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4265727209161072" crossorigin="anonymous"></script>
+</head>
+<body>
+<div id="menu" class="screen">
+  <div class="menu-bg"></div>
+  <div class="menu-content">
+    <h1 class="game-title">Orb Clash</h1>
+    <p class="tagline">Aim · Dash · Dominate</p>
+    <div class="menu-buttons">
+      <button class="btn primary" id="vsAiBtn">🤖 vs AI</button>
+      <button class="btn primary" id="vsPlayerBtn">👥 2P Local</button>
+      <button class="btn secondary" id="howBtn">📖 How to Play</button>
+      <button class="btn secondary" id="settingsBtn">⚙️ Settings</button>
+      <button class="btn ghost" onclick="window.open('https://www.corelumetech.in/game-hub.html')">🌐 More Games</button>
+    </div>
+    <div class="menu-stats">
+      <div class="mstat"><span class="mstat-val" id="menuWins">0</span><span class="mstat-lbl">Total Wins</span></div>
+      <div class="mstat"><span class="mstat-val" id="menuGames">0</span><span class="mstat-lbl">Games Played</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="aiSelect" class="screen hide">
+  <div class="panel">
+    <h2>AI Difficulty</h2>
+    <div class="mode-grid">
+      <div class="mode-card" data-ai="easy"><div class="mode-icon">😊</div><h3>Easy</h3><p>Random aim. Slow reactions. Great for learning.</p></div>
+      <div class="mode-card" data-ai="medium"><div class="mode-icon">😐</div><h3>Medium</h3><p>Tracks you. Decent aim. Dodges sometimes.</p></div>
+      <div class="mode-card" data-ai="hard"><div class="mode-icon">😈</div><h3>Hard</h3><p>Predictive aiming. Active dodging. Strategic.</p></div>
+      <div class="mode-card" data-ai="impossible"><div class="mode-icon">💀</div><h3>Impossible</h3><p>Near-perfect aim. Frame-perfect reactions.</p></div>
+    </div>
+    <button class="btn ghost" id="aiBackBtn">← Back</button>
+  </div>
+</div>
+
+<div id="howToPlay" class="screen hide">
+  <div class="panel how-panel">
+    <h2>How to Play</h2>
+    <div class="how-steps">
+      <div class="how-step"><div class="how-num">1</div><div><h4>Move & Shoot</h4><p><strong>P1:</strong> WASD + Space to shoot<br><strong>P2:</strong> Arrows + Enter to shoot</p></div></div>
+      <div class="how-step"><div class="how-num">2</div><div><h4>Dash</h4><p><strong>P1:</strong> Shift · <strong>P2:</strong> Ctrl — Quick burst of speed to dodge bullets. 3-second cooldown.</p></div></div>
+      <div class="how-step"><div class="how-num">3</div><div><h4>Charged Shots</h4><p>Hold <strong>Q</strong> (P1) or <strong>0</strong> (P2) to charge. Bigger, faster, more damage!</p></div></div>
+      <div class="how-step"><div class="how-num">4</div><div><h4>Powerups</h4><p>🛡️ <strong>Shield</strong> · ⚡ <strong>Speed</strong> · 🔱 <strong>Triple Shot</strong> · 💚 <strong>Heal</strong></p></div></div>
+      <div class="how-step"><div class="how-num">5</div><div><h4>Win Condition</h4><p>First to <strong>3 round wins</strong> takes the match. Bullets bounce off walls!</p></div></div>
+    </div>
+    <div class="shortcut-grid">
+      <h3>Full Controls</h3>
+      <div class="shortcut"><kbd>P</kbd>/<kbd>Esc</kbd> Pause · <kbd>R</kbd> Restart · <kbd>M</kbd> Menu</div>
+    </div>
+    <button class="btn ghost" id="howBackBtn">← Back</button>
+  </div>
+</div>
+
+<div id="settings" class="screen hide">
+  <div class="panel">
+    <h2>Settings</h2>
+    <div class="setting-row"><label>SFX Volume</label><input type="range" id="sfxVol" min="0" max="100" value="70"></div>
+    <div class="setting-row"><label>Music Volume</label><input type="range" id="musicVol" min="0" max="100" value="40"></div>
+    <div class="setting-row"><label>Visual Theme</label>
+      <select id="themeSelect"><option value="cosmic">Cosmic Arena</option><option value="tron">Tron Grid</option><option value="lava">Lava Pit</option><option value="ice">Ice Rink</option></select>
+    </div>
+    <div class="setting-row"><label>Rounds to Win</label>
+      <select id="roundsSelect"><option value="3" selected>Best of 5 (3 wins)</option><option value="2">Best of 3 (2 wins)</option><option value="5">Best of 9 (5 wins)</option></select>
+    </div>
+    <button class="btn ghost" id="settingsBackBtn">← Back</button>
+  </div>
+</div>
+
+<div id="hud" class="hide">
+  <div class="hud-left">
+    <div class="plbl" style="color:#3b82f6" id="p1Label">Player 1</div>
+    <div class="hpbar"><div class="hpfill p1" id="hp1" style="width:100%"></div></div>
+    <div class="dash-bar"><div class="dash-fill" id="dash1" style="width:100%"></div></div>
+  </div>
+  <div class="hud-center">
+    <div id="rd" class="round-display">Round 1</div>
+    <div id="pupAlert" class="pup-alert hide"></div>
+  </div>
+  <div class="hud-right">
+    <div class="plbl" style="color:#ef4444" id="p2Label">Player 2</div>
+    <div class="hpbar"><div class="hpfill p2" id="hp2" style="width:100%"></div></div>
+    <div class="dash-bar"><div class="dash-fill" id="dash2" style="width:100%"></div></div>
+  </div>
+</div>
+
+<canvas id="c"></canvas>
+
+<div id="roundScreen" class="screen hide">
+  <div class="panel round-panel">
+    <h2 id="roundTitle">Round 2</h2>
+    <div class="round-scores">
+      <div class="rs"><span style="color:#3b82f6">P1</span><span id="rsP1">0</span></div>
+      <div class="rs-vs">vs</div>
+      <div class="rs"><span style="color:#ef4444">P2</span><span id="rsP2">0</span></div>
+    </div>
+    <p id="roundMsg" style="color:var(--text2);margin-top:12px">Get ready...</p>
+  </div>
+</div>
+
+<div id="pause" class="screen hide">
+  <div class="panel pause-panel">
+    <h2>⏸️ Paused</h2>
+    <button class="btn primary" id="resumeBtn">▶ Resume</button>
+    <button class="btn secondary" id="restartBtn2">🔄 Restart</button>
+    <button class="btn ghost" id="pauseMenuBtn">🏠 Main Menu</button>
+  </div>
+</div>
+
+<div id="win" class="screen hide">
+  <div class="panel over-panel">
+    <div id="wt" class="wtxt">Player 1 Wins!</div>
+    <div class="over-stats">
+      <div class="ostat"><span id="winShots">0</span> Shots Fired</div>
+      <div class="ostat"><span id="winHits">0</span> Hits Landed</div>
+      <div class="ostat"><span id="winDashes">0</span> Dashes Used</div>
+    </div>
+    <div class="over-btns">
+      <button class="btn primary" id="rematchBtn">🔄 Rematch</button>
+      <button class="btn ghost" id="menuBtn">🏠 Main Menu</button>
+    </div>
+  </div>
+</div>
+
+<script src="../shared/protect.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
