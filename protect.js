@@ -3,8 +3,8 @@
 // Corelume Tech © 2026
 // ============================================================
 
-// === DEVTOOLS PROTECTION ===
-// Block right-click context menu
+// === BASIC DEVTOOLS SHORTCUT PREVENTION ===
+// Block right-click context menu on canvas/game
 document.addEventListener('contextmenu', e => e.preventDefault());
 
 // Block keyboard shortcuts for DevTools
@@ -18,19 +18,6 @@ document.addEventListener('keydown', e => {
   // Ctrl+S (Save Page)
   if (e.ctrlKey && (e.key === 's' || e.key === 'S')) { e.preventDefault(); return false; }
 });
-
-// DevTools open detection via debugger timing
-(function detectDevTools() {
-  const threshold = 160;
-  setInterval(() => {
-    const start = performance.now();
-    debugger;
-    const end = performance.now();
-    if (end - start > threshold) {
-      document.body.innerHTML = '<div style="position:fixed;inset:0;background:#0a0a14;display:flex;align-items:center;justify-content:center;z-index:99999;font-family:Inter,sans-serif"><div style="text-align:center;color:#fff;max-width:400px"><h1 style="font-size:42px;margin-bottom:16px">🛑</h1><h2 style="font-size:24px;margin-bottom:12px">Developer Tools Detected</h2><p style="color:#9ca3af;font-size:14px;line-height:1.6">Please close Developer Tools to continue playing.<br>This is to protect the game integrity.</p><button onclick="location.reload()" style="margin-top:24px;padding:12px 32px;background:#3b82f6;color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit">Reload Game</button></div></div>';
-    }
-  }, 1000);
-})();
 
 // === AD-BLOCK DETECTION ===
 (function detectAdBlock() {
